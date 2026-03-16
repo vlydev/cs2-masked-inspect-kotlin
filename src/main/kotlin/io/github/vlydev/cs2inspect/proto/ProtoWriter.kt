@@ -36,13 +36,8 @@ class ProtoWriter {
     }
 
     private fun writeVarint(value: Int) {
-        // Treat as unsigned 32-bit; for negative int32 proto3 encodes as 64-bit
-        if (value >= 0) {
-            writeVarint(value.toLong())
-        } else {
-            // Sign-extend to 64-bit (two's complement)
-            writeVarint(value.toLong() and 0xFFFFFFFFFFFFFFFFL.toLong())
-        }
+        // For negative int32 proto3 sign-extends to 64-bit (10-byte varint)
+        writeVarint(value.toLong())
     }
 
     private fun writeTag(fieldNum: Int, wireType: Int) {
