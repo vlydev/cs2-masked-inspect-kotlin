@@ -1,4 +1,4 @@
-package dev.vly.cs2inspect.proto
+package io.github.vlydev.cs2inspect.proto
 
 import java.nio.ByteBuffer
 import java.nio.ByteOrder

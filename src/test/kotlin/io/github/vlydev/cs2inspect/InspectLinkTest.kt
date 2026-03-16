@@ -1,7 +1,7 @@
-package dev.vly.cs2inspect
+package io.github.vlydev.cs2inspect
 
-import dev.vly.cs2inspect.models.ItemPreviewData
-import dev.vly.cs2inspect.models.Sticker
+import io.github.vlydev.cs2inspect.models.ItemPreviewData
+import io.github.vlydev.cs2inspect.models.Sticker
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith

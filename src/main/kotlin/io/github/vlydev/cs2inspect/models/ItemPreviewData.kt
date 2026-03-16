@@ -1,4 +1,4 @@
-package dev.vly.cs2inspect.models
+package io.github.vlydev.cs2inspect.models
 
 /**
  * Decoded representation of a CEconItemPreviewDataBlock protobuf message.

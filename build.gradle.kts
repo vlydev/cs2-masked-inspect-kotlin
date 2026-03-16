@@ -1,10 +1,9 @@
 plugins {
     kotlin("jvm") version "2.0.21"
-    `maven-publish`
-    signing
+    id("com.vanniktech.maven.publish") version "0.29.0"
 }
 
-group = "dev.vly"
+group = "io.github.vlydev"
 version = "0.1.0"
 
 repositories {
@@ -23,60 +22,31 @@ kotlin {
     jvmToolchain(8)
 }
 
-java {
-    withSourcesJar()
-    withJavadocJar()
-}
+mavenPublishing {
+    publishToMavenCentral(com.vanniktech.maven.publish.SonatypeHost.CENTRAL_PORTAL)
+    signAllPublications()
 
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["java"])
-            pom {
-                name.set("cs2-masked-inspect")
-                description.set("Offline encoder/decoder for CS2 masked inspect URLs — pure Kotlin, no dependencies")
-                url.set("https://github.com/vlydev/cs2-masked-inspect-kotlin")
-                licenses {
-                    license {
-                        name.set("MIT License")
-                        url.set("https://opensource.org/licenses/MIT")
-                    }
-                }
-                developers {
-                    developer {
-                        id.set("vlydev")
-                        name.set("VlyDev")
-                        email.set("vladdnepr1989@gmail.com")
-                    }
-                }
-                scm {
-                    url.set("https://github.com/vlydev/cs2-masked-inspect-kotlin")
-                }
+    coordinates("io.github.vlydev", "cs2-masked-inspect", version.toString())
+
+    pom {
+        name.set("cs2-masked-inspect")
+        description.set("Offline encoder/decoder for CS2 masked inspect URLs — pure Kotlin, no dependencies")
+        url.set("https://github.com/vlydev/cs2-masked-inspect-kotlin")
+        licenses {
+            license {
+                name.set("MIT License")
+                url.set("https://opensource.org/licenses/MIT")
             }
         }
-    }
-    repositories {
-        maven {
-            name = "OSSRH"
-            url = uri(
-                if (version.toString().endsWith("SNAPSHOT"))
-                    "https://s01.oss.sonatype.org/content/repositories/snapshots/"
-                else
-                    "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-            )
-            credentials {
-                username = System.getenv("MAVEN_USERNAME")
-                password = System.getenv("MAVEN_PASSWORD")
+        developers {
+            developer {
+                id.set("vlydev")
+                name.set("VlyDev")
+                email.set("vladdnepr1989@gmail.com")
             }
         }
-    }
-}
-
-signing {
-    val signingKey = System.getenv("SIGNING_KEY")
-    val signingPassword = System.getenv("SIGNING_KEY_PASSWORD")
-    if (signingKey != null && signingPassword != null) {
-        useInMemoryPgpKeys(signingKey, signingPassword)
-        sign(publishing.publications["maven"])
+        scm {
+            url.set("https://github.com/vlydev/cs2-masked-inspect-kotlin")
+        }
     }
 }

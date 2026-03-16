@@ -1,9 +1,9 @@
-package dev.vly.cs2inspect
+package io.github.vlydev.cs2inspect
 
-import dev.vly.cs2inspect.models.ItemPreviewData
-import dev.vly.cs2inspect.models.Sticker
-import dev.vly.cs2inspect.proto.ProtoReader
-import dev.vly.cs2inspect.proto.ProtoWriter
+import io.github.vlydev.cs2inspect.models.ItemPreviewData
+import io.github.vlydev.cs2inspect.models.Sticker
+import io.github.vlydev.cs2inspect.proto.ProtoReader
+import io.github.vlydev.cs2inspect.proto.ProtoWriter
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.util.zip.CRC32

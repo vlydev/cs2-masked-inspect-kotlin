@@ -1,4 +1,4 @@
-package dev.vly.cs2inspect.models
+package io.github.vlydev.cs2inspect.models
 
 /**
  * Represents a sticker (or keychain) applied to a CS2 item.
