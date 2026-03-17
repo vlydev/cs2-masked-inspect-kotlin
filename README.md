@@ -100,6 +100,29 @@ InspectLink.isMasked(maskedUrl)  // true  — contains decodable protobuf payloa
 InspectLink.isClassic(classicUrl) // true  — classic S/A/D decimal format
 ```
 
+## Gen codes
+
+Generate a Steam inspect URL from item parameters (defindex, paintindex, paintseed, paintwear):
+
+```kotlin
+import io.github.vlydev.cs2inspect.GenCode
+
+// Generate a Steam inspect URL
+val url = GenCode.generate(7, 474, 306, 0.22540508f)
+
+// Convert to gen code
+val item = ItemPreviewData(defIndex = 7, paintIndex = 474, paintSeed = 306, paintWear = 0.22540508f)
+val code = GenCode.toGenCode(item)        // "!gen 7 474 306 0.22540508"
+val code2 = GenCode.toGenCode(item, "!g") // "!g 7 474 306 0.22540508"
+
+// Parse a gen code
+val item2 = GenCode.parseGenCode("!gen 7 474 306 0.22540508")
+
+// Convert an existing inspect link directly to a gen code
+val code = GenCode.genCodeFromLink("steam://rungame/730/76561202255233023/+csgo_econ_action_preview%20001A...")
+// "!gen 7 474 306 0.22540508"
+```
+
 ## Supported URL formats
 
 The deserializer accepts all of:
