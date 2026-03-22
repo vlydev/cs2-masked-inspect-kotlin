@@ -19,4 +19,6 @@ data class Sticker(
     val offsetZ: Float? = null,
     val pattern: Int = 0,
     val highlightReel: Int? = null,
+    /** Proto field 12 (varint): actual variant ID for sticker slabs; null if not present. */
+    val paintKit: Int? = null,
 )

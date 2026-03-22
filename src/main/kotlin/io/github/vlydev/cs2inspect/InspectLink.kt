@@ -219,6 +219,7 @@ object InspectLink {
         s.offsetZ?.let { w.writeFloat32Fixed(9, it) }
         w.writeUint32(10, s.pattern)
         s.highlightReel?.let { w.writeUint32(11, it) }
+        s.paintKit?.let { w.writeUint32(12, it) }
         return w.toBytes()
     }
 
@@ -235,6 +236,7 @@ object InspectLink {
         var offsetZ: Float? = null
         var pattern = 0
         var highlightReel: Int? = null
+        var paintKit: Int? = null
 
         for (field in reader.readAllFields()) {
             when (field) {
@@ -244,6 +246,7 @@ object InspectLink {
                     6 -> tintId = field.value.toInt()
                     10 -> pattern = field.value.toInt()
                     11 -> highlightReel = field.value.toInt()
+                    12 -> paintKit = field.value.toInt()
                     else -> { /* unknown field, skip */ }
                 }
                 is ProtoReader.Field.Fixed32 -> {
@@ -275,6 +278,7 @@ object InspectLink {
             offsetZ = offsetZ,
             pattern = pattern,
             highlightReel = highlightReel,
+            paintKit = paintKit,
         )
     }
 

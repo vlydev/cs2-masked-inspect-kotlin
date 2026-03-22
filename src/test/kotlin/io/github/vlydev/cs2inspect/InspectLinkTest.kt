@@ -38,6 +38,12 @@ class InspectLinkTest {
         /** CSFloat vector C — keychain item (defIndex=1355), highlightReel=345 */
         const val CSFLOAT_C = "A2B2A2BA69A882A28AA192AECAA2D2B700A3A5AAA2B286FA7BA0D684BE72"
 
+        /** Sticker slab A — defIndex=1355, rarity=5, quality=8, keychains[0].stickerId=37, paintKit=7256 */
+        const val SLAB_A = "918191895A9BB191B994A199F991E191339096999181B4F149A98D5C0889"
+
+        /** Sticker slab B — defIndex=1355, rarity=3, quality=8, keychains[0].stickerId=37, paintKit=275 */
+        const val SLAB_B = "CBDBCBD300C1EBCBE3C8FBC3A3CBBBCB69CACCC3CBDBEEAB58C9B8B67C83"
+
         private const val HYBRID_URL =
             "steam://rungame/730/76561202255233023/+csgo_econ_action_preview%20" +
             "S76561199323320483A50075495125D1101C4C4FCD4AB10092D31B8143914211829A1FAE3FD125119591141117308191301EA550C1111912E3C111151D12C413E6BAC54D1D29BAD731E191501B92C2C9B6BF92F5411C25B2A731E191501B92C2CEA2B182E5411F7212A731E191501B92C2C4F89C12F549164592A799713611956F4339F"
@@ -594,5 +600,78 @@ class InspectLinkTest {
             withNull.length < withFloat.length,
             "Expected null paintWear (${ withNull.length }) to produce fewer bytes than 0.5f (${withFloat.length})"
         )
+    }
+
+    // -----------------------------------------------------------------------
+    // Sticker slab test vectors (paintKit field)
+    // -----------------------------------------------------------------------
+
+    @Test
+    fun testSlabADefIndex() {
+        assertEquals(1355, InspectLink.deserialize(SLAB_A).defIndex)
+    }
+
+    @Test
+    fun testSlabARarity() {
+        assertEquals(5, InspectLink.deserialize(SLAB_A).rarity)
+    }
+
+    @Test
+    fun testSlabAQuality() {
+        assertEquals(8, InspectLink.deserialize(SLAB_A).quality)
+    }
+
+    @Test
+    fun testSlabAKeychainStickerId() {
+        val keychains = InspectLink.deserialize(SLAB_A).keychains
+        assertEquals(1, keychains.size)
+        assertEquals(37, keychains[0].stickerId)
+    }
+
+    @Test
+    fun testSlabAKeychainPaintKit() {
+        val keychains = InspectLink.deserialize(SLAB_A).keychains
+        assertEquals(7256, keychains[0].paintKit)
+    }
+
+    @Test
+    fun testSlabBDefIndex() {
+        assertEquals(1355, InspectLink.deserialize(SLAB_B).defIndex)
+    }
+
+    @Test
+    fun testSlabBRarity() {
+        assertEquals(3, InspectLink.deserialize(SLAB_B).rarity)
+    }
+
+    @Test
+    fun testSlabBQuality() {
+        assertEquals(8, InspectLink.deserialize(SLAB_B).quality)
+    }
+
+    @Test
+    fun testSlabBKeychainStickerId() {
+        val keychains = InspectLink.deserialize(SLAB_B).keychains
+        assertEquals(1, keychains.size)
+        assertEquals(37, keychains[0].stickerId)
+    }
+
+    @Test
+    fun testSlabBKeychainPaintKit() {
+        val keychains = InspectLink.deserialize(SLAB_B).keychains
+        assertEquals(275, keychains[0].paintKit)
+    }
+
+    @Test
+    fun testSlabRoundtripPaintKit() {
+        val data = ItemPreviewData(
+            defIndex = 1355,
+            rarity = 5,
+            quality = 8,
+            keychains = listOf(Sticker(slot = 0, stickerId = 37, paintKit = 7256))
+        )
+        val result = roundtrip(data)
+        assertEquals(1, result.keychains.size)
+        assertEquals(7256, result.keychains[0].paintKit)
     }
 }
