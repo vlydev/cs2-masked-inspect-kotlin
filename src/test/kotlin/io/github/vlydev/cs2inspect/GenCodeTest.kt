@@ -39,6 +39,44 @@ class GenCodeTest {
     }
 
     @Test
+    fun testToGenCodeKeychainWithPaintKitAppendsPaintKit() {
+        val item = ItemPreviewData(
+            defIndex = 1355, paintIndex = 0, paintSeed = 0, paintWear = 0f,
+            keychains = listOf(Sticker(slot = 0, stickerId = 37, wear = 0f, paintKit = 929)),
+        )
+        val code = GenCode.toGenCode(item, "")
+        val tokens = code.split(" ")
+        val n = tokens.size
+        assertEquals("37",  tokens[n - 3])
+        assertEquals("0",   tokens[n - 2])
+        assertEquals("929", tokens[n - 1])
+    }
+
+    @Test
+    fun testToGenCodeKeychainWithoutPaintKitNoExtraToken() {
+        val item = ItemPreviewData(
+            defIndex = 7, paintIndex = 0, paintSeed = 0, paintWear = 0f,
+            keychains = listOf(Sticker(slot = 0, stickerId = 36, wear = 0f)),
+        )
+        val code = GenCode.toGenCode(item, "")
+        val tokens = code.split(" ")
+        val n = tokens.size
+        assertEquals("36", tokens[n - 2])
+        assertEquals("0",  tokens[n - 1])
+    }
+
+    @Test
+    fun testGenCodeFromLinkSlabUrlEndsWithPaintKit() {
+        val slabUrl = "steam://run/730//+csgo_econ_action_preview%20819181994A8BA181A982B189E981F181238086898191A4E1208698F309C9"
+        val code = GenCode.genCodeFromLink(slabUrl, "")
+        val tokens = code.split(" ")
+        val n = tokens.size
+        assertEquals("37",  tokens[n - 3])
+        assertEquals("0",   tokens[n - 2])
+        assertEquals("929", tokens[n - 1])
+    }
+
+    @Test
     fun testParseGenCodeBasic() {
         val item = GenCode.parseGenCode("!gen 7 474 306 0.22540508")
         assertEquals(7, item.defIndex)

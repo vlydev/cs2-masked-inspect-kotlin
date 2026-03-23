@@ -45,6 +45,9 @@ object GenCode {
             for (s in filtered.sortedBy { it.slot }) {
                 result += s.stickerId.toString()
                 result += formatFloat(s.wear ?: 0f)
+                if (s.paintKit != null) {
+                    result += s.paintKit.toString()
+                }
             }
         }
 
