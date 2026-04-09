@@ -131,9 +131,9 @@ object InspectLink {
 
     private val HYBRID_URL_RE = Regex("""S\d+A\d+D([0-9A-Fa-f]+)$""")
     private val CLASSIC_URL_RE = Regex("""csgo_econ_action_preview(?:%20|\s)[SM]\d+A\d+D\d+$""", RegexOption.IGNORE_CASE)
-    private val MASKED_URL_RE = Regex("""csgo_econ_action_preview(?:%20|\s)[0-9A-Fa-f]{10,}$""", RegexOption.IGNORE_CASE)
+    private val MASKED_URL_RE = Regex("""csgo_econ_action_preview(?:%20|\s)%?[0-9A-Fa-f]{10,}$""", RegexOption.IGNORE_CASE)
     private val INSPECT_URL_RE = Regex("""(?:%20|\s|\+)A([0-9A-Fa-f]+)""", RegexOption.IGNORE_CASE)
-    private val PURE_MASKED_RE = Regex("""csgo_econ_action_preview(?:%20|\s|\+)([0-9A-Fa-f]{10,})$""", RegexOption.IGNORE_CASE)
+    private val PURE_MASKED_RE = Regex("""csgo_econ_action_preview(?:%20|\s|\+)%?([0-9A-Fa-f]{10,})$""", RegexOption.IGNORE_CASE)
     private val HEX_LETTER_RE = Regex("""[A-Fa-f]""")
 
     private fun extractHex(input: String): String {
