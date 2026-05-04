@@ -75,21 +75,41 @@ object InspectLink {
      */
     fun deserialize(input: String): ItemPreviewData {
         val hex = extractHex(input)
+        val preview = if (input.length > 120) input.take(100) + "..." else input
 
         if (hex.length > 4096) {
-            throw IllegalArgumentException(
-                "Payload too long (max 4096 hex chars): \"${input.take(64)}...\""
+            throw MalformedInspectLinkException(
+                "Malformed inspect URL: payload too long (max 4096 hex chars). Input: \"$preview\""
+            )
+        }
+
+        // Reject malformed hex up-front so callers always get one consistent
+        // MalformedInspectLinkException instead of an internal NumberFormatException
+        // / IllegalArgumentException leaking the implementation.
+        if (hex.isEmpty() || hex.length % 2 != 0) {
+            throw MalformedInspectLinkException(
+                "Malformed inspect URL: hex payload has invalid length (${hex.length} chars, must be even and non-empty). The source likely truncated the URL. Input: \"$preview\""
+            )
+        }
+        if (!HEX_ONLY_RE.matches(hex)) {
+            throw MalformedInspectLinkException(
+                "Malformed inspect URL: payload contains non-hex characters. Input: \"$preview\""
             )
         }
 
         val raw = try {
             hexToBytes(hex)
         } catch (e: IllegalArgumentException) {
-            throw IllegalArgumentException("Payload too short or invalid hex: \"$input\"", e)
+            throw MalformedInspectLinkException(
+                "Malformed inspect URL: hex decode failed (${e.message}). Input: \"$preview\"",
+                e
+            )
         }
 
         if (raw.size < 6) {
-            throw IllegalArgumentException("Payload too short or invalid hex: \"$input\"")
+            throw MalformedInspectLinkException(
+                "Malformed inspect URL: payload too short (${raw.size} bytes, need >=6). Input: \"$preview\""
+            )
         }
 
         val key = raw[0].toInt() and 0xFF
@@ -103,7 +123,14 @@ object InspectLink {
         // Layout: [key_byte] [proto_bytes] [4-byte checksum]
         val protoBytes = decrypted.copyOfRange(1, decrypted.size - 4)
 
-        return decodeItem(protoBytes)
+        return try {
+            decodeItem(protoBytes)
+        } catch (e: Throwable) {
+            throw MalformedInspectLinkException(
+                "Malformed inspect URL: protobuf decode failed (${e.message}). Payload likely corrupted or truncated. Input: \"$preview\"",
+                e
+            )
+        }
     }
 
     /**
@@ -135,6 +162,7 @@ object InspectLink {
     private val INSPECT_URL_RE = Regex("""(?:%20|\s|\+)A([0-9A-Fa-f]+)""", RegexOption.IGNORE_CASE)
     private val PURE_MASKED_RE = Regex("""csgo_econ_action_preview(?:%20|\s|\+)%?([0-9A-Fa-f]{10,})$""", RegexOption.IGNORE_CASE)
     private val HEX_LETTER_RE = Regex("""[A-Fa-f]""")
+    private val HEX_ONLY_RE = Regex("""^[0-9A-Fa-f]+$""")
 
     private fun extractHex(input: String): String {
         val stripped = input.trim()
